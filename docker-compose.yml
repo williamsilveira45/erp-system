@@ -1,0 +1,56 @@
+version: "3.7"
+volumes:
+    postgres-data:
+    redis-data:
+networks:
+    frontend:
+    backend:
+services:
+    proxy:
+        image: nginx:latest
+        container_name: erp-nginx
+        ports:
+            - "8080:80"
+        volumes:
+            - ./:/var/www/app
+            - ./docker/nginx/nginx-site.conf:/etc/nginx/conf.d/default.conf
+        networks:
+            - frontend
+            - backend
+    php:
+        container_name: erp-php
+        build:
+            context: ./docker/php
+            dockerfile: Dockerfile
+        image: laravelgis-php:latest
+        volumes:
+            - ./:/var/www/app
+            - ./docker/php/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+            - ./docker/scripts/install.sh:/tmp/install.sh
+        networks:
+            - backend
+    postgres:
+        container_name: erp-postgres
+        image: postgres:latest
+        volumes:
+            - postgres-data:/var/lib/postgresql/data
+        ports:
+            - "5432:5432"
+        environment:
+            POSTGRES_PASSWORD: 12345
+            POSTGRES_USER: root
+            POSTGRES_DB: erp
+            PGDATA: /var/lib/postgresql/data
+        networks:
+            - backend
+    redis:
+        container_name: erp-redis
+        image: redis:latest
+        sysctls:
+            - net.core.somaxconn=511
+        ports:
+            - "6379:6379"
+        volumes:
+            - redis-data:/data
+        networks:
+            - backend
