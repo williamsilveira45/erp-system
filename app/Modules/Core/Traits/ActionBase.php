@@ -11,7 +11,7 @@ abstract class ActionBase
 {
     use ActionService;
 
-    protected Data $data;
+    protected null|Data $data;
 
     protected Model $model;
 
@@ -22,7 +22,7 @@ abstract class ActionBase
         return $this;
     }
 
-    public function execute(Data $data): mixed
+    public function execute(?Data $data = null): mixed
     {
         $this->data = $data;
 

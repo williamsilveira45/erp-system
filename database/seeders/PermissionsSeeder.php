@@ -33,10 +33,14 @@ class PermissionsSeeder extends Seeder
 
         $saRoles = Role::create(['name' => 'Super-Admin']);
 
-        $users = User::query()->get();
+        $users = User::query()->where('email', '<>', env('DEFAULT_USER_EMAIL'))->get();
 
         foreach ($users as $user) {
             $user->assignRole($adminRole);
         }
+
+        //sa admin
+        $saAdmin = User::query()->where('email', env('DEFAULT_USER_EMAIL'))->first();
+        $saAdmin->assignRole($saRoles);
     }
 }

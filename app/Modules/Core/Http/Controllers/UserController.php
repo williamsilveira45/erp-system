@@ -51,9 +51,14 @@ class UserController extends Controller
                 response: 401,
                 description: 'Unauthorized'
             ),
+            new OA\Response(
+                response: 419,
+                description: 'CSRF token mismatch.'
+            ),
         ]
     )]
-    public function index(UsersRequest $request, UserRepositoryInterface $repository): mixed
+    /** @todo fix the return method */
+    public function index(UsersRequest $request, UserRepositoryInterface $repository): UserDTO
     {
         return UserDTO::collection($repository->getAll($request->perPage, $request->page));
     }

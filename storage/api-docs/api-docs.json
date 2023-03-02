@@ -23,7 +23,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "OK",
                         "content": {
                             "application/json": {
@@ -38,8 +38,43 @@
                     },
                     "401": {
                         "description": "Unauthorized"
+                    },
+                    "419": {
+                        "description": "CSRF token mismatch"
                     }
                 }
+            }
+        },
+        "/api/tokens/create": {
+            "post": {
+                "tags": [
+                    "Core/Authentication"
+                ],
+                "summary": "Create Api Request",
+                "operationId": "edc01c4e51a235abd7979cee259fb146",
+                "responses": {
+                    "201": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreateTokenResponse"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "419": {
+                        "description": "CSRF token mismatch"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
             }
         },
         "/api/users": {
@@ -85,6 +120,9 @@
                     },
                     "401": {
                         "description": "Unauthorized"
+                    },
+                    "419": {
+                        "description": "CSRF token mismatch."
                     }
                 },
                 "security": [
@@ -97,6 +135,15 @@
     },
     "components": {
         "schemas": {
+            "CreateTokenResponse": {
+                "description": "This is the response for the create token request",
+                "properties": {
+                    "token": {
+                        "type": "string"
+                    }
+                },
+                "type": "object"
+            },
             "LoginRequest": {
                 "description": "Request Parameters",
                 "properties": {
